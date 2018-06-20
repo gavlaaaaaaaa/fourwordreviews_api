@@ -14,11 +14,14 @@ router.post('/', function(req,res){
 		 	if(err) throw err;
 			userdata.password = hash
 			res.locals.connection.query('INSERT INTO user (username, email, password) VALUES (?,?,?) ', [userdata.username, userdata.email, userdata.password] , function (error,results,fields){
-	        	if (error){
-				return res.status(409).send('Username or email is not unique: '+error)
-			}
-        		return res.send({ error: false, data:results, message: 'User has been registered successfully'});
-        		});
+	        		if (error){
+					return res.status(409).send('Username or email is not unique: '+error)
+				}
+				res.locals.connection.query('SELECT id from user where email = ?' , [userdata.email], function(error,result,fields){
+	        			return res.send({ error: false, user_id:result[0].id, message: 'User has been registered successfully'});
+
+        			})
+			})
 		})
 	
 	}
