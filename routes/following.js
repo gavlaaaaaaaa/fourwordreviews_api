@@ -25,4 +25,13 @@ router.post('/', function(req,res){
 	});
 });
 
+
+/* DELETE follow */
+router.delete('/:user_id/unfollow/:follows_user_id', function(req,res){
+        res.locals.connection.query('DELETE FROM follow where user_id = ? and follows_user_id = ?  ', [ req.body.user_id, req.body.follows_user_id ] , function (error,results,fields){
+        if (error) throw error;
+        return res.send({ error: false, data:results, message: 'Unfollowed successfully.'});
+        });
+});
+
 module.exports = router;
